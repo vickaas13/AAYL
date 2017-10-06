@@ -5,8 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>InvoiceHelper</title>
-<link 	rel="stylesheet" href="../css/success.css">
-<link 	rel="stylesheet" href="../css/invoice.css">
+<link rel="stylesheet" href="../css/success.css">
+<link rel="stylesheet" href="../css/invoice.css">
 
 </head>
 <%
@@ -28,11 +28,13 @@
 	}
 %>
 <body background="../images/wallpaper.jpeg">
-<h3> <%=userName%></h3> 
+	<h3>
+		<%=userName%></h3>
 	<ul>
 		<li><a href="success.jsp">Home</a></li>
 		<li><a href="invoice.jsp">Create Invoice</a></li>
-		<li><a href="../Controller?ResetPassWord">Set Security Question</a></li>
+		<li><a href="../Controller?ResetPassWord">Set Security
+				Question</a></li>
 		<li><a href="#about">About</a></li>
 	</ul>
 	<div class="invoice-box">
@@ -54,6 +56,10 @@
 			<tr class="information">
 				<td colspan="5">
 					<table>
+						<tr class="heading">
+							<td>Billing Address</td>
+							<td>Shipping Address</td>
+						</tr>
 						<tr>
 							<td>Green Leaf Design<br> 111 Main Street<br>
 								Pleasanton, CA 99999 <br>99999-99999<br>vsghodke@gmail.com
@@ -125,6 +131,6 @@
 	</div>
 	<form action="../Controller?Logout" method="post">
 		<input type="submit" value="Logout" id="button">
-	</form> 
+	</form>
 </body>
 </html>

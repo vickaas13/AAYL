@@ -1,5 +1,6 @@
 package com.aaylprj;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -7,17 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import oracle.net.ns.SessionAtts;
 
 public class ControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,6 +25,8 @@ public class ControllerServlet extends HttpServlet {
 	static MyDBConnect dbconn = new MyDBConnect();
 	static Connection conn = dbconn.createConn();
 	static Statement stmt = null;
+	Random rand = new Random();
+	int i = rand.nextInt(1000);
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -130,6 +131,46 @@ public class ControllerServlet extends HttpServlet {
 			}
 
 		}
+		if (opt.equals("details")) {
+			HttpSession session = request.getSession();
+			String user=(String) session.getAttribute("user");
+			System.out.println("user"+user);
+			String cname = request.getParameter("name");
+			String caddress = request.getParameter("address");
+			i++;
+			String file="images/";
+			file+=i;
+			file += request.getParameter("file");
+			File folder = new File("../../images");
+			File[] listOfFiles = folder.listFiles();
+
+			for (File file1 : listOfFiles) {
+			    if (file1.isFile()) {
+			        System.out.println("fgsggggggggggggggggggggg"+file1.getName());
+			    }
+			}
+			System.out.println(file);
+			PreparedStatement stmt;
+			try {
+				stmt = conn.prepareStatement("insert into users_16329_details values(?,?,?,?)");
+				stmt.setString(1, user);
+				stmt.setString(2, cname);
+				stmt.setString(3, caddress);
+				stmt.setString(4, file);
+				stmt.executeUpdate();
+				//RequestDispatcher rd = request.getRequestDispatcher("jsp/success.jsp");
+				request.setAttribute("message", "Details Accepted");
+				response.sendRedirect("jsp/success.jsp");
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				RequestDispatcher rd = request.getRequestDispatcher("jsp/success.jsp");
+				request.setAttribute("message", "Something Went Wrong");
+				rd.forward(request, response);
+			}
+
+		}
+
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

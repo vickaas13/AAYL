@@ -1,0 +1,27 @@
+https://www.youtube.com/watch?v=yMxTEjHKMNg 
+
+create table users_16329_1 as(select* from users_16329);
+create table users_16329_forgot_1 as (select * from users_16329_forgot);
+drop table users_secret;
+select * from users_16329;
+commit;
+drop table event_vik;
+create table event_vik as(select * from event,avail number);
+create table event_vik as(select * from events_pranav);
+select * from event_vik;
+update event_vik set available_seats=50 where total_seats=70;
+create table Users_16329(firstName varchar(20),lastName varchar(20),email varchar(100),mobileNumber number(10),passWord varchar(38));
+select * from Users_16329;
+commit;
+desc users_16329;
+delete from users_16329 where email='fsf';
+insert into users_16329 values('&fname','&lname','&email1',&mb,'&passWord');
+select * from users_16329 where EMAIL='vikas@gmail.com';
+create table users_16329_forgot(email varchar(100),sec_que varchar(100),answer varchar(20),foreign key (email) references users_16329(email));
+alter table users_16329 add primary key (email);
+desc users_16329_forgot;
+select * from users_16329_forgot;
+create table users_16329_details(email varchar(100),cname varchar(100),caddress varchar(200),filepath varchar(100),foreign key(email) references users_16329(email));
+desc users_16329_details;
+commit;
+select * from users_16329_details;

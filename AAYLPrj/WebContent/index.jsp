@@ -87,7 +87,7 @@ function myFunction() {
 						<input type="password" name="passWord" value="vikas" required />
 					</div>
 					<p class="forgot">
-						<a href="#">Forgot Password?</a>
+						<a href="Controller?forgot">Forgot Password?</a>
 					</p>
 					<input type="submit" class="button button-block" value="Log In">
 				</form>

@@ -32,9 +32,10 @@
 		<%=userName%></h3>
 	<ul>
 		<li><a href="success.jsp">Home</a></li>
-		<li><a href="invoice.jsp">Create Invoice</a></li>
-		<li><a href="../Controller?ResetPassWord">Set Security
+		  <li><a href="../Controller?reset">Change passWord</a></li>
+		<li><a href="../Controller?passWord">Set Security
 				Question</a></li>
+		<li><a href="details.jsp">Add Details</a></li>
 		<li><a href="#about">About</a></li>
 	</ul>
 	<div class="invoice-box">

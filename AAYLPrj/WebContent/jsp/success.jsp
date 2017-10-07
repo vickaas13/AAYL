@@ -20,7 +20,7 @@ function myFunction() {
 	<%
 		String user = null;
 		if (session.getAttribute("user") == null) {
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("../index.jsp");
 		} else
 			user = (String) session.getAttribute("user");
 		String userName = null;
@@ -35,14 +35,25 @@ function myFunction() {
 			}
 		}
 	%>
+	<%
+	String str=(String)session.getAttribute("success");
+	if(str!=null){
+		if(str=="PassWord Changed Successfully")
+			out.println("<h1><font color='green'>"+str+"</font></h1>");
+		else
+			out.println("<h1><font color='red'>"+str+"</font></h1>");
+	}		
+	%> 
 	<h3>Welcome <%=userName%> <br><!-- Login successful. Your Session ID=<%=sessionID%> --> </h3>
 		
  <!-- User=<%=user%> -->
 <ul>
   <li><a href="success.jsp">Home</a></li>
   <li><a href="invoice.jsp">Create Invoice</a></li>
+  <li><a href="../Controller?reset">Change passWord</a></li>
+  <li><a href="../Controller?passWord">Set answer for Security
+				Question</a></li>
   <li><a href="details.jsp">Add Details</a></li>
-  <!-- li><a href="../Controller?ResetPassWord">Set Security Question</a></li> -->
   <li><a href="#about">About</a></li>
 </ul>
 	<form action="../Controller?Logout" method="post">

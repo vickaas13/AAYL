@@ -32,13 +32,14 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		String opt = request.getQueryString();
+		HttpSession session = request.getSession();
 		// if (request.getPathInfo().toString().equals("/Login")) {
 		if (opt.equals("Login")) {
 			String email = request.getParameter("email");
 			String passWord = request.getParameter("passWord");
 			String sql = "select * from users_16329 where email='" + email + "'";
 			try {
-				HttpSession session = request.getSession();
+				
 				stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql);
 				if (!rs.isBeforeFirst()) {
@@ -99,55 +100,157 @@ public class ControllerServlet extends HttpServlet {
 			Cookie[] cookies = request.getCookies();
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
+					System.out.println("cookies:" + cookie + " " + cookie.getValue());
 					if (cookie.getName().equals("JSESSIONID")) {
 						System.out.println("JSESSIONID=" + cookie.getValue());
 						break;
 					}
 				}
 			}
-			HttpSession session = request.getSession(false);
-			if (session != null)
-				session.invalidate();
+			HttpSession session1 = request.getSession(false);
+			if (session1 != null)
+				session1.invalidate();
 			response.sendRedirect("index.jsp");
 		}
 
-		if (opt.equals("ResetPassWord")) {
-			System.out.println("ResetPassWord");
-			System.out.println("Your school name ?");
-			String question = "Your school name ?";
-			out.println(question);
-			String sql = "insert into users_16329_forgot values(?,?,?)";
-			HttpSession session = request.getSession();
-			String email = (String) session.getAttribute("user");
-			System.out.println("email:is " + email);
-			try {
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ps.setString(1, email);
-				ps.setString(2, question);
-				ps.setString(3, question);
-				ps.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
+		if (opt.equals("passWord")) {
+			if (request.getParameter("answer") == null) {
+				out.println("Your school name ?");
+				out.print("<form action=\"");
+				out.println("Controller?passWord\" method=POST>");
+				out.println("Answer: ");
+				out.println("<input type=text size=15 name=\"answer\" required>");
+				out.println("<input type=submit value=\"Submit\"></form>");
+			} else {
+//				HttpSession session = request.getSession();
+				String email = (String) session.getAttribute("user");
+				System.out.println("Email:"+email);
+				String answer = request.getParameter("answer");
+				String sql = "insert into users_16329_forgot values(?,?)";
+				try {
+					stmt = conn.createStatement();
+					
+					ResultSet rs = stmt
+							.executeQuery("select * from users_16329_forgot where email='" + email + "'");
+					if (!rs.isBeforeFirst()) {
+						System.out.println("inside faltu if");
+						PreparedStatement ps = conn.prepareStatement(sql);
+						ps.setString(1, email);
+						ps.setString(2, answer);
+						ps.executeUpdate();
+						session.setAttribute("success", "Answer inserted");
+						response.sendRedirect("jsp/success.jsp");
+					} else {
+						int z = stmt.executeUpdate("update users_16329_forgot set answer='" + answer + "'");
+						session.setAttribute("success", "Answer updated");
+						response.sendRedirect("jsp/success.jsp");
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
+		if (opt.equals("reset")) {
+			if (request.getParameter("email1") == null && request.getParameter("npass") == null) {
+				out.println("Welcome to password reset wizard");
+				out.print("<form action=\"");
+				out.println("Controller?reset\" method=POST>");
+				out.println("Email: ");
+				out.println("<input type=text size=20 name=\"email1\" required>");
+				out.println("Old PassWord: ");
+				out.println("<input type=password size=20 name=\"opass\" required>");
+				out.println("New PassWord: ");
+				out.println("<input type=password size=20 name=\"npass\" required>");
+				out.println("<input type=submit value=\"Submit\"></form>");
+			} else {
+				System.out.println("else stmt");
+				String email = request.getParameter("email1");
+				String opass = request.getParameter("opass");
+				String npass = request.getParameter("npass");
+				String sql = "update users_16329 set password = '" + npass + "' where email= '" + email
+						+ "' and password = '" + opass + "'";
+				try {
+					stmt = conn.createStatement();
+					System.out.println("inside try");
+					int z = stmt.executeUpdate(sql);
+//					HttpSession session = request.getSession();
+					if (z > 0) {
+						System.out.println("if z>0");
+						session.setAttribute("success", "PassWord Changed Successfully");
+						response.sendRedirect("jsp/success.jsp");
+					} else {
+						System.out.println("if z<0");
+						session.setAttribute("success", "Wrong email or password ");
+						response.sendRedirect("jsp/success.jsp");
+					}
+				} catch (SQLException e) {
+					System.out.println("ctch block");
+					e.printStackTrace();
+				}
+
+			}
+		}
+		if (opt.equals("forgot")) {
+			if (request.getParameter("email1") == null && request.getParameter("answer") == null) {
+				out.println("Welcome to password reset wizard");
+				out.print("<form action=\"");
+				out.println("Controller?forgot\" method=POST>");
+				out.println("Email: ");
+				out.println("<input type=text size=20 name=\"email1\" required>");
+				out.println("Answer to Security question: ");
+				out.println("<input type=password size=20 name=\"answer\" required>");
+				out.println("New PassWord: ");
+				out.println("<input type=password size=20 name=\"npass\" required>");
+				out.println("<input type=submit value=\"Submit\"></form>");
+				System.out.println("hey viks");
+			}
+			else{
+				String email = request.getParameter("email1");
+				String answer = request.getParameter("answer");
+				String npass = request.getParameter("npass");
+				try {
+					stmt = conn.createStatement();
+					System.out.println("inside try");
+//					HttpSession session = request.getSession();
+					ResultSet rs = stmt.executeQuery("select count(*) from users_16329_forgot where email='"+email+"' and answer='"+answer+"'");
+					if (rs.isBeforeFirst()) {
+						String sql = "update users_16329 set password = ? where email= ?";
+						PreparedStatement ps = conn.prepareStatement(sql);
+						ps.setString(1, email);
+						ps.setString(2, npass);
+						ps.executeUpdate();
+						session.setAttribute("user", email);
+						session.setAttribute("success", "PassWord Changed Successfully");
+						response.sendRedirect("jsp/success.jsp");
+					} else {
+						session.setAttribute("message", "Either you have not set answer to the security question or it may be wrong");
+						response.sendRedirect("../index.jsp");
+					}
+				} catch (SQLException e) {
+					System.out.println("ctch block");
+					e.printStackTrace();
+				}
+
+			}
+		}
 		if (opt.equals("details")) {
-			HttpSession session = request.getSession();
-			String user=(String) session.getAttribute("user");
-			System.out.println("user"+user);
+//			HttpSession session = request.getSession();
+			String user = (String) session.getAttribute("user");
+			System.out.println("user" + user);
 			String cname = request.getParameter("name");
 			String caddress = request.getParameter("address");
 			i++;
-			String file="images/";
-			file+=i;
+			String file = "images/";
+			file += i;
 			file += request.getParameter("file");
 			File folder = new File("../../images");
 			File[] listOfFiles = folder.listFiles();
 
 			for (File file1 : listOfFiles) {
-			    if (file1.isFile()) {
-			        System.out.println("fgsggggggggggggggggggggg"+file1.getName());
-			    }
+				if (file1.isFile()) {
+					System.out.println("fgsggggggggggggggggggggg" + file1.getName());
+				}
 			}
 			System.out.println(file);
 			PreparedStatement stmt;
@@ -158,7 +261,6 @@ public class ControllerServlet extends HttpServlet {
 				stmt.setString(3, caddress);
 				stmt.setString(4, file);
 				stmt.executeUpdate();
-				//RequestDispatcher rd = request.getRequestDispatcher("jsp/success.jsp");
 				request.setAttribute("message", "Details Accepted");
 				response.sendRedirect("jsp/success.jsp");
 

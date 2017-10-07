@@ -11,7 +11,7 @@
 <%
 		String user = null;
 		if (session.getAttribute("user") == null) {
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("../index.jsp");
 		} else
 			user = (String) session.getAttribute("user");
 		String userName = null;
@@ -32,8 +32,7 @@
 			<div id="signup">
 				<!-- div 3 starts here  -->
 				<h1>Fill Details Here</h1>
-				<form action="../Controller?details" method="post"
-					onsubmit="myFunction()">
+				<form action="../Controller?details" method="post" enctype="multipart/form-data">
 
 					<div class="top-row">
 						<div class="field-wrap">

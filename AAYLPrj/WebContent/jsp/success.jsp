@@ -50,8 +50,8 @@ function myFunction() {
 <ul>
   <li><a href="success.jsp">Home</a></li>
   <li><a href="invoice.jsp">Create Invoice</a></li>
-  <li><a href="../Controller?reset">Change passWord</a></li>
-  <li><a href="../Controller?passWord">Set answer for Security
+  <li><a href="passwordreset.jsp">Change passWord</a></li>
+  <li><a href="secquestion.jsp">Set answer for Security
 				Question</a></li>
   <li><a href="details.jsp">Add Details</a></li>
   <li><a href="#about">About</a></li>

@@ -87,7 +87,7 @@ function myFunction() {
 						<input type="password" name="passWord" value="vikas" required />
 					</div>
 					<p class="forgot">
-						<a href="Controller?forgot">Forgot Password?</a>
+						<a href="jsp/forgotpassword.jsp">Forgot Password?</a>
 					</p>
 					<input type="submit" class="button button-block" value="Log In">
 				</form>
